@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { WhatsappApiService } from './whatsapp-api.service';
 import { Request, Response } from 'express';
-import { ReceiveMessageWhatsAppDto } from './dto/whatsapp-api.dto';
 
 @Controller('whatsapp-api')
 export class WhatsappApiController {
@@ -42,7 +41,7 @@ export class WhatsappApiController {
 
       if (typeof messageObject !== 'undefined') {
         const text = this.whatsappApiService.getTextUser(messageObject[0]);
-        await this.whatsappApiService.sendMessagesWhatsapp(
+        this.whatsappApiService.sendMessagesWhatsapp(
           `Hola ${messageObject[0].from} enviaste un mensaje diciendo: ${text}.`,
           messageObject[0].from,
         );

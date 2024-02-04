@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ReceiveMessageWhatsAppDto } from './dto/whatsapp-api.dto';
-import axios from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class WhatsappApiService {
+  constructor(private readonly httpService: HttpService) {}
 
   getTextUser(message) {
     let text = '';
@@ -25,10 +26,7 @@ export class WhatsappApiService {
     return text;
   }
 
-  async sendMessagesWhatsapp(
-    textResponse: string,
-    number: string,
-  ): Promise<any> {
+  sendMessagesWhatsapp(textResponse: string, number: string): Observable<any> {
     const data = JSON.stringify({
       messaging_product: 'whatsapp',
       to: number,
@@ -38,53 +36,17 @@ export class WhatsappApiService {
       type: 'text',
     });
 
-    const options = {
-      method: 'post',
-      url: 'https://graph.facebook.com/v18.0/221851531013038/messages',
-      data: data,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization:
-          'Bearer EAAFFFrIkr5EBO9FDTZAiyzGvg3jZALCLVMmrsHZAL2EYW7lbXzFjPnKeCyc6WdXQVpZBLHUmEurZCqIuDYFZA79GcQwRria2le5BxU4ZCvZAbRYdSfZCOKgr6dAyn99ZCGZB9maQk0xhpiG2BVN9lK2qxeWot0nHBKIOc6J81tjgtCqm6WO3mZAvv0EFvtyPs2Rc52OZA',
-      },
+    const url = 'https://graph.facebook.com/v18.0/221851531013038/messages';
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization:
+        'Bearer EAAFFFrIkr5EBO9FDTZAiyzGvg3jZALCLVMmrsHZAL2EYW7lbXzFjPnKeCyc6WdXQVpZBLHUmEurZCqIuDYFZA79GcQwRria2le5BxU4ZCvZAbRYdSfZCOKgr6dAyn99ZCGZB9maQk0xhpiG2BVN9lK2qxeWot0nHBKIOc6J81tjgtCqm6WO3mZAvv0EFvtyPs2Rc52OZA',
     };
 
-    try {
-      const response = await axios(options);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error al enviar el mensaje a Facebook');
-    }
+    return this.httpService
+      .post(url, data, { headers })
+      .pipe
+      // Puedes realizar transformaciones adicionales aquí si es necesario
+      ();
   }
-
-  // sendMessagesWhatsapp(textResponse, number) {
-  // const data = JSON.stringify({
-  //   "messaging_product": "whatsapp",
-  //   "to": number,
-  //   "text": {
-  //     "body": textResponse
-  //   },
-  //   "type": "text"
-  // });
-
-  //   const options = {
-  //     host: "graph.facebook.com",
-  //     path: "/v18.0/221851531013038/messages",
-  //     method: "POST",
-  //     body: data,
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: "Bearer EAAFFFrIkr5EBO9FDTZAiyzGvg3jZALCLVMmrsHZAL2EYW7lbXzFjPnKeCyc6WdXQVpZBLHUmEurZCqIuDYFZA79GcQwRria2le5BxU4ZCvZAbRYdSfZCOKgr6dAyn99ZCGZB9maQk0xhpiG2BVN9lK2qxeWot0nHBKIOc6J81tjgtCqm6WO3mZAvv0EFvtyPs2Rc52OZA"
-  //     }
-  //   }
-
-  //   // const req = https.request(options, res => res.on("data", data => process.stdout.write(data)))
-
-  //   // req.on("error", error => console.log(error))
-
-  //   // req.write(data)
-  //   // req.end();
-
-  // }
 }
