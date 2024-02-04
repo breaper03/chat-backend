@@ -31,13 +31,17 @@ export class WhatsappApiController {
     }
   }
 
-  @Post()
+  @Post("/")
   async receivedMessage(@Body() req, @Res() res: Response) {
+    console.log("entra")
+    console.log(req)
     try {
-      const entry = req.body.entry[0];
+      const entry = req.entry[0];
       const changes = entry.changes[0];
+      console.log("messageObject", changes)
       const value = changes.value;
       const messageObject = value.messages;
+
 
       if (typeof messageObject !== 'undefined') {
         const text = this.whatsappApiService.getTextUser(messageObject[0]);
@@ -45,9 +49,14 @@ export class WhatsappApiController {
           `Hola ${messageObject[0].from} enviaste un mensaje diciendo: ${text}.`,
           messageObject[0].from,
         );
+        console.log("exito")
+      } else {
+        console.log("error")
+        return res.send('EVENT_RECEIVED')
       }
       return res.send('EVENT_RECEIVED');
     } catch (error) {
+      console.log("error en catch")
       return res.send('EVENT_RECEIVED');
     }
   }
