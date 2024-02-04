@@ -33,7 +33,7 @@ export class WhatsappApiController {
   }
 
   @Post()
-  receivedMessage(@Body() req, @Res() res: Response) {
+  async receivedMessage(@Body() req, @Res() res: Response) {
     try {
       const entry = req.body.entry[0];
       const changes = entry.changes[0];
@@ -42,7 +42,7 @@ export class WhatsappApiController {
 
       if (typeof messageObject !== 'undefined') {
         const text = this.whatsappApiService.getTextUser(messageObject[0]);
-        this.whatsappApiService.sendMessagesWhatsapp(
+        await this.whatsappApiService.sendMessagesWhatsapp(
           `Hola ${messageObject[0].from} enviaste un mensaje diciendo: ${text}.`,
           messageObject[0].from,
         );

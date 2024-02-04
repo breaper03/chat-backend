@@ -4,13 +4,6 @@ import axios from 'axios';
 
 @Injectable()
 export class WhatsappApiService {
-  create(receiveMessageWhatsAppDto: ReceiveMessageWhatsAppDto) {
-    return 'This action adds a new whatsappApi';
-  }
-
-  findAll() {
-    return `This action returns all whatsappApi`;
-  }
 
   getTextUser(message) {
     let text = '';
