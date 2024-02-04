@@ -15,7 +15,7 @@ import { ReceiveMessageWhatsAppDto } from './dto/whatsapp-api.dto';
 export class WhatsappApiController {
   constructor(private readonly whatsappApiService: WhatsappApiService) {}
 
-  @Get('verifyToken')
+  @Get()
   verifyToken(@Query() req: Request, @Res() res: Response) {
     try {
       const accessToken = 'LKJ124JH124J1K2';
@@ -32,7 +32,7 @@ export class WhatsappApiController {
     }
   }
 
-  @Post('receivedMessage')
+  @Post()
   receivedMessage(@Body() req, @Res() res: Response) {
     try {
       const entry = req.body.entry[0];
